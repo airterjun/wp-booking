@@ -1,0 +1,72 @@
+/*
+** Author : Edy Saputra
+*/
+
+@mixin flex(){
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+}
+
+@mixin setFlex($arg){
+	-webkit-box-flex: $arg;      /* OLD - iOS 6-, Safari 3.1-6 */
+	-moz-box-flex: $arg;         /* OLD - Firefox 19- */
+	-webkit-flex: $arg;          /* Chrome */
+	-ms-flex: $arg;              /* IE 10 */
+	flex: $arg;
+}
+
+/*
+** Styling for global surf container
+*/
+.go-surf-container{
+	float: left;
+	
+	.set-flex{
+		@include flex();
+
+		&> div{
+			padding: 10px;
+
+			@include setFlex(1 auto);
+		}
+	}
+
+	select,
+	input{
+		border: 1px solid #CCC;
+		width: 100%;
+		position: relative;
+		margin: auto;
+		height: 40px;
+		line-height: 40px;
+		outline: none;
+	}
+
+	input{
+		text-align: center;
+		border-radius: 5px;
+
+		&[type=submit]{
+			background-color: #333;
+			color : #FFF;
+			text-transform: uppercase;
+			cursor: pointer;
+		}
+	}
+
+
+	&.step-two{
+		max-width: 800px;
+		margin-top : 150px;
+	}
+
+}
+
+#go-surf-home-form{
+	float: left;
+	width: 100%;
+	background-color: #ebebeb;
+}
