@@ -45,10 +45,9 @@ function get_result_step_one()
 	$bookStep->session = $bookStep->generate_session_key(true);
 	$_SESSION['clinet_session_id'] = $bookStep->session;
 
-
 	if (isset($_POST['step_home'])) {
 
-		get_step_one_form();
+		get_step_one();
 
 	}
 
@@ -87,7 +86,7 @@ add_shortcode('go_surf_booking', 'crete_gs_shortcode');
  * Render form steping
  */
 
-function get_step_one_form()
+function get_step_one()
 {
 
 
@@ -116,32 +115,7 @@ function get_step_two(){
 
 	$_SESSION['step_two_query'] = $_POST;
 
-	?>
-
-	<div>Search Criteria : <?php echo $_POST['type'] ?></div>
-	<div>Adult : <?php echo $_POST['step_two']['adult']['name'] ?> | <?php echo $_POST['step_two']['adult']['skill'] ?></div>
-	<div>Child : <?php echo $_POST['step_two']['child']['name'] ?> | <?php echo $_POST['step_two']['child']['skill'] ?></div>
-	<div>Date : <?php echo $_POST['step_two']['date']['day'] ?> | <?php echo $_POST['step_two']['date']['time'] ?></div>
-	<div>Duration : <?php echo $_POST['step_two']['duration'] ?></div>
-	<div>Borad : <?php echo $_POST['step_two']['borad'] ?></div>
-
-	<form method="POST" action="?step=3">
-		<div>
-			<label>INDIVIDUAL ACTIVITIES Child</label>
-			<input type="radio" name="step_three[activity][child]" value="Activity 1">
-		</div>
-
-		<div>
-			<label>INDIVIDUAL ACTIVITIES Child</label>
-			<input type="radio" name="step_three[activity][adult]" value="Activity adult 1"> Adult 1
-			<input type="radio" name="step_three[activity][adult]" value="Activity adult 2"> Adult 2
-		</div>
-		<div>
-			<input type="submit" value="Submit" name="post_step_three">
-		</div>
-	</form>
-
-	<?php
+	form_step_three();
 }
 
 function get_step_three(){

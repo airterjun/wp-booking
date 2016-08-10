@@ -18,12 +18,12 @@ function form_book()
 						<div class="homeform set-flex">
 							<div class="rowform">
 								<div class="select-style">
-									<select id="standard-dropdown" name="surfing_activities[]" required="">
+									<select id="standard-dropdown" name="surfing_activities" required="">
 										<option value="" class="test-class-1">Select Surf Activity</option>
 										<option value="surf-lessons-tours" class="test-class-1">Surf Lessons &amp; Tours</option>
-										<option name="surfing_activities[]" value="Surf Lessons">Surf Lessons</option>
-										<option name="surfing_activities[]" value="Surf Tours">Surf Tours</option>
-										<option name="surfing_activities[]" value="Surf Board Rental">Surf Board Rental</option>
+										<option value="surf-lessons">Surf Lessons</option>
+										<option value="surf-tours">Surf Tours</option>
+										<option value="surf-board-rental">Surf Board Rental</option>
 									</select>
 								</div>
 							</div>
@@ -58,9 +58,9 @@ function form_book()
 									</select></div>
 							</div>
 							<div class="rowform">
-								<input type="text" name="reservation_date[0]" id="datepicker" value=""
+								<input type="text" name="reservation_date" class="datepicker" value=""
 							                            placeholder="RESERVATION DATE" required=""
-							                            class="hasDatepicker"></div>
+							                            class=""></div>
 							<div class="rowform">
 								<div class="select-style"><select id="standard-dropdown3" name="duration" required="">
 										<option value="">DURATION</option>
@@ -89,77 +89,126 @@ function form_book()
 
 function form_step_two()
 {
+	$surfing_activities = $_SESSION['step_one_query']['surfing_activities'];
+	$duration = $_SESSION['step_one_query']['duration'];
 	?>
 	<div class="go-surf-container step-two">
 		<form method="POST" action="?step=2">
 			Lessons & Tours Specifications<br/>
 
 			<div>
+				<label>Surfing Activities</label> :
+				<input type="checkbox" name="surfing_activities[]" value="Surf Lessons" id="surf-lessons"  
+					<?php if(($surfing_activities == 'surf-lessons-tours') || ($surfing_activities == 'surf-lessons')){ ?>
+						checked="checked"	
+					<?php } ?>
+						> Surf Lessons
+
+				<input type="checkbox" name="surfing_activities[]" value="Surf Tours" id="surf-tours"  
+					<?php if(($surfing_activities == 'surf-lessons-tours') || ($surfing_activities == 'surf-tours')){ ?>
+						checked="checked"	
+					<?php } ?>
+						> Surf Tours
+				<input type="checkbox" name="surfing_activities[]" value="Surf Board Rental" id="surf-board-rental" 
+					<?php if($surfing_activities == 'surf-board-rental'){ ?>
+						checked="checked"	
+					<?php } ?>
+						> Surf Board Rental
+			</div>
+			<div>
 				<label>Duration</label> :
-				<select class="step_two[day]">
+				<select class="" name="duration">
 					<?php for ($i = 1; $i <= 3; $i++) { ?>
-						<option value="<?php echo $i ?>"><?php echo $i ?> Day</option>
+						<option value="<?php echo $i ?>" 
+							<?php if($i == $duration){ ?>
+								selected="selected"	
+							<?php } ?>
+								><?php echo $i ?> Day</option>
 					<?php } ?>
 				</select>
 			</div>
+			<div>
+				<label>Reservation Day 1</label> :
+				<input type="text" name="reservation_date" class="datepicker" value="<?php echo $_SESSION['step_one_query']['reservation_date'] ?>"
+						placeholder="RESERVATION DATE" required="">
+			</div>
+
 
 			<div>Personal Information</div>
 
-			<div>Please insert names and surf proficiency level.
+			<div>
+				Please insert names and surf proficiency level.
 				If you take Intermediate Lesson/ Surf Tour, you must to fill up the surf abilities form.
 				The form is available on the next personal information page.
 			</div>
 
 			<div>
 				<label>Adult</label> :
-				<select name="step_two[adult][num]">
+				<select id="adult-participant" name="adult[number]">
 					<?php for ($i = 0; $i <= 10; $i++) { ?>
-						<option value="<?php echo $i ?>"><?php echo $i ?></option>
+						<option value="<?php echo $i ?>" 
+							<?php if($i == $_SESSION['step_one_query']['adult']){ ?>
+								selected="selected"	
+							<?php } ?>
+								><?php echo $i ?></option>
 					<?php } ?>
 				</select>
+				<input type="hidden" id="count_adult" value="<?php echo $_SESSION['step_one_query']['adult'] ?>">
 			</div>
-
-			<div>
-				<input type="text" name="step_two[adult][name]">
-				<input type="text" name="step_two[adult][skill]" value="beginer">
+			<div class="adults-container">
+				<?php if($_SESSION['step_one_query']['adult'] > 0){ ?>
+				
+					<?php for($a = 1; $a <= $_SESSION['step_one_query']['adult']; $a++){ ?>
+						<input placeholder="Name..." type="text" name="adult[participant][<?php echo $a-1 ?>][name]">
+						<select name="adult[participant][<?php echo $a-1 ?>][skill]">
+							<option value="beginner">Beginner</option>
+							<option value="intermediate">Intermediate</option>
+						</select>						
+					<?php	}	?>
+				
+				<?php	}	?>
 			</div>
-
+			
+			<br/>
 			<div>
-				<label>Adult</label> :
-				<select name="step_two[child][num]">
+				<label>Children</label> :
+				<select id="child-participant" name="child[number]">
 					<?php for ($i = 0; $i <= 10; $i++) { ?>
-						<option value="<?php echo $i ?>"><?php echo $i ?></option>
+						<option value="<?php echo $i ?>" 
+							<?php if($i == $_SESSION['step_one_query']['child']){ ?>
+								selected="selected"	
+							<?php } ?>
+								><?php echo $i ?></option>
 					<?php } ?>
 				</select>
+				<input type="hidden" id="count_child" value="<?php echo $_SESSION['step_one_query']['child'] ?>">
 			</div>
 
-			<div>
-				<input type="text" name="step_two[child][name]">
-				<input type="text" name="step_two[child][year]" value="7">
-				<input type="text" name="step_two[child][skill]" value="beginer">
+			<div class="children-container">
+				<?php if($_SESSION['step_one_query']['child'] > 0){ ?>
+				
+					<?php for($c = 1; $c <= $_SESSION['step_one_query']['child']; $c++){ ?>						
+						<input placeholder="Name..." type="text" name="child[participant][<?php echo $c-1 ?>][name]">
+						<select name="child[participant][<?php echo $c-1 ?>][age]">
+							<?php for($j=7; $j<=15; $j++){ ?>
+								<option value="<?php echo $j ?>"><?php echo $j ?> Years</option>
+							<?php } ?>
+						</select>
+						<select name="child[participant][<?php echo $c-1 ?>][skill]">
+							<option value="beginner">Beginner</option>
+							<option value="intermediate">Intermediate</option>
+						</select>						
+					<?php	}	?>
+				
+				<?php 	}	?>
 			</div>
 
-			<div>Surf Board Rental</div>
-			<div>
-				<label>Reservation Date</label>
-				<input type="text" name="step_two[date][day]">
-				<input type="text" name="step_two[date][time]">
+			<br/>
+			<div class="board-rental-wrapper">
+				
 			</div>
-
-			<div>
-				<label>Duration</label>
-				<input type="text" name="step_two[duration]">
-			</div>
-
-			<div>
-				<label>Number of Board</label>
-				<select name="step_two[borad]">
-					<?php for ($i = 0; $i <= 10; $i++) { ?>
-						<option value="<?php echo $i ?>"><?php echo $i ?></option>
-					<?php } ?>
-				</select>
-			</div>
-
+			
+			<br/>
 			<div>
 				<input type="submit" value="Submit" name="post_step_two">
 				<input type="hidden" value="<?php echo $_POST['surfing_activities'][0]; ?>" name="step_two[type]">
@@ -168,12 +217,243 @@ function form_step_two()
 		</form>
 	</div>
 	<?php
+
+}
+
+function form_step_three()
+{	
+	$data = $_SESSION['step_two_query'];
+	?>
+	<div class="go-surf-container step-three">
+		<div>
+			Search Criteria : 
+			<?php 
+				foreach ($data['surfing_activities'] as $key => $value) {
+					echo $value;
+					if($value != end($data['surfing_activities'])){
+						echo ", ";
+					}else{
+						echo " | ";
+					}
+				}
+				echo $data['reservation_date']." | ".$data['duration']." Day(s) | ".$data['adult']['number']." Adult(s) | ".$data['child']['number']." Children";
+
+			?>
+		</div>
+		
+		<div>
+			Surf Proficiency Level :
+			<ul>
+				<?php
+					if($data['adult']['number'] > 0)
+					{
+						foreach ($data['adult']['participant'] as $key => $value) {
+				?>
+							<li><?php echo $value['name']." | ".$value['skill'] ?></li>
+				<?php
+						}
+					}
+
+					if($data['child']['number'] > 0)
+					{
+						foreach ($data['child']['participant'] as $key => $value) {
+				?>
+							<li><?php echo $value['name']." | ".$value['skill'] ?></li>
+				<?php
+						}
+					}
+				?>
+			</ul>
+		</div>
+
+		<?php if(isset($data['board_rental'])){ ?>
+			<div>
+				Board Rental : 
+				<?php 
+					echo $data['board_rental']['date']." | ".$data['board_rental']['time']." | ".$data['board_rental']['duration']." | ".$data['board_rental']['number']." Board(s)";
+				?>
+			</div>
+		<?php } ?>
+
+		<form method="POST" action="?step=3">
+			<?php
+				if($data['adult']['number'] > 0)
+				{
+					foreach ($data['adult']['participant'] as $key => $value) {
+			?>
+						<div class="resultbox">
+		    				<div class="boxtitle">INDIVIDUAL ACTIVITIES : 
+		    					<span class=""><?php echo $value['name'] ?></span>
+		    				</div>
+			<?php
+							//If surfing tour true & Sklill = intermediate
+							if((in_array("Surf Tours", $data['surfing_activities'])) && ($value['skill'] == 'intermediate')){
+								get_cpt_data(-1, 'tours', '');
+							}
+							if ($value['skill'] == 'intermediate'){ // if skill intermediate
+								get_cpt_data(-1, 'lesson', 'Intermediate Lesson');
+							}
+							if ($value['skill'] == 'beginner') { // if skill beginner & age >= 15 y.o
+								get_cpt_data(-1, 'lesson', 'Group Lesson');
+								get_cpt_data(-1, 'lesson', 'Private Lesson');
+							}
+			?>
+						</div>
+			<?php			
+					}
+				}
+
+				if($data['child']['number'] > 0)
+				{
+					foreach ($data['child']['participant'] as $key => $value) {
+			?>
+						<div class="resultbox">
+		    				<div class="boxtitle">INDIVIDUAL ACTIVITIES : 
+		    					<span class=""><?php echo $value['name'] ?></span>
+		    				</div>
+			<?php
+							//If surfing tour true & Sklill = intermediate
+							if((in_array("Surf Tours", $data['surfing_activities'])) && ($value['skill'] == 'intermediate')){
+								get_cpt_data(-1, 'tours', '');
+							}
+							if ($value['skill'] == 'intermediate'){ // if skill intermediate
+								get_cpt_data(-1, 'lesson', 'Intermediate Lesson');
+							}
+							if (($value['skill'] == 'beginner') && ($value['age'] >= 15)) { // if skill beginner & age >= 15 y.o
+								get_cpt_data(-1, 'lesson', 'Group Lesson');
+								get_cpt_data(-1, 'lesson', 'Private Lesson');
+							}
+							if ($value['age'] < 15) { //age < 15 y.o
+								get_cpt_data(-1, 'lesson', 'Kids Private Lesson');
+							}
+			?>
+						</div>
+			<?php
+					}
+				}
+
+				if($data['adult']['number'] > 0)
+				{
+					foreach ($data['adult']['participant'] as $index => $adult) {
+						foreach ($data['adult']['participant'] as $key => $value) {
+							if(($index != $key) && ($value['skill'] == 'beginner') && ($adult['skill'] == 'beginner')){
+			?>
+								<div class="resultbox">
+				    				<div class="boxtitle">ACTIVITIES WITH PEERS : 
+				    					<span class=""><?php echo $adult['name'] ?></span>
+				    					<span class=""><?php echo $value['name'] ?></span>
+				    				</div>
+									<?php get_cpt_data(-1, 'lesson', 'Semi Private Lesson'); ?>
+								</div>
+			<?php			
+							}
+						}
+					}
+				}
+				
+				if($data['child']['number'] > 0)
+				{
+					foreach ($data['child']['participant'] as $index => $child) {
+						foreach ($data['child']['participant'] as $key => $value) {
+							if(($index != $key) 
+								&& ($value['skill'] == 'beginner') 
+								&& ($child['skill'] == 'beginner')
+								&& ($value['age'] >= 10)
+								&& ($child['age'] >= 10))
+							{
+
+			?>
+								<div class="resultbox">
+				    				<div class="boxtitle">ACTIVITIES WITH PEERS : 
+				    					<span class=""><?php echo $child['name'] ?></span>
+				    					<span class=""><?php echo $value['name'] ?></span>
+				    				</div>
+									<?php get_cpt_data(-1, 'lesson', 'Kids Semi Private Lesson'); ?>
+								</div>
+			<?php			
+							}
+						}
+					}
+				}
+
+				if(($data['child']['number'] > 0) && ($data['adult']['number'] > 0))
+				{
+					foreach ($data['child']['participant'] as $index => $child) {
+						foreach ($data['adult']['participant'] as $key => $adult) {
+							if(($adult['skill'] == 'beginner') 
+								&& ($child['skill'] == 'beginner')
+								&& ($child['age'] >= 10))
+							{
+
+			?>
+								<div class="resultbox">
+				    				<div class="boxtitle">ACTIVITIES WITH PEERS : 
+				    					<span class=""><?php echo $adult['name'] ?></span>
+				    					<span class=""><?php echo $child['name'] ?></span>
+				    				</div>
+									<?php get_cpt_data(-1, 'lesson', 'Semi Private Lesson'); ?>
+								</div>
+			<?php			
+							}
+						}
+					}
+				}
+			?>
+
+				<br/>
+				<input type="submit" value="Submit" name="post_step_three">
+			
+		</form>
+	</div>
+	<?php	
+}
+
+function get_cpt_data($post_per_page, $post_type, $category){
+
+	$query = new WP_Query(
+        array(
+            'posts_per_page' => $post_per_page,
+            'post_type' => $post_type,
+            'post_status' => 'publish',
+            'prod-category' => $category
+        )
+    );
+	
+    foreach ($query->posts as $key => $value) {
+    	cpt_template($value);
+	}	
+}
+
+function cpt_template($post_data)
+{	
+	?>
+
+	    <div class="infosbox">
+	        <div class="infosbox-left"><img width="150" height="150" src="<?php echo get_the_post_thumbnail_url($post_data->ID) ?>" class=""/>
+	        </div>
+	        <div class="infosbox-right">
+	            <div class="infosbox-top-left">
+	                <div class="infosbox-title"><?php echo $post_data->post_title ?></div>
+	                <div class="infosbox-desc"><?php echo $post_data->post_content ?></div>
+	            </div>
+	            <div class="">
+	                <div class="">
+	                	PRICE/PERSON/ 58500 IDR
+	                </div>
+	                <div class="">BOOK
+	                    <input name="" type="radio" id="" value=""/>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	<?php
 }
 
 function form_client_data()
 {
+	var_dump($_SESSION);
 	?>
-
+	<div class="go-surf-container step-final">
 	<form id="bookstep" method="post" action="?step=final">
 		<div class="column1">
 			<div class="bookrow">
@@ -552,5 +832,6 @@ function form_client_data()
 			<input type="submit" value="Confirm" name="confirm_step">
 		</div>
 	</form>
+</div>
 	<?php
 }

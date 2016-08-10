@@ -75,6 +75,7 @@ class GoSurf
 			  client_email varchar(100) NULL,
 			  client_phone varchar(200) NOT NULL,
 			  client_hotel varchar(200) NOT NULL,
+			  client_hotel_address varchar(200) NOT NULL,
 			  client_name_in_hotel varchar(200) NOT NULL,
 			  client_arrival varchar(200) NOT NULL,
 			  client_country varchar(200) NOT NULL,
@@ -85,6 +86,7 @@ class GoSurf
 			CREATE TABLE {$wpdb->prefix}go_surf_order_item (
 			  order_id bigint(20) NOT NULL auto_increment,
 			  client_id bigint(20) NOT NULL,
+			  session_id bigint(20) NOT NULL,
 			  order_create TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			  order_status char(10) NOT NULL,
 			  PRIMARY KEY  (order_id)
