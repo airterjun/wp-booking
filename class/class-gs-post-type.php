@@ -19,8 +19,12 @@ class GoSurfCPT
 	public function init()
 	{
 
-		add_action('init', array($this, 'register_post_types'));
-		add_action('init', 'product_category', 0); //add_action(‘init’,’function_callback’, priority);
+		if ( is_admin() ) {
+			add_action('init', array($this, 'register_post_types'));
+			add_action('add_meta_boxes', array($this, 'register_post_meta_box'));
+			add_action('save_post', array($this, 'save_post_meta'));
+		}
+
 
 	}
 
@@ -83,6 +87,83 @@ class GoSurfCPT
 				'taxonomies'          => array( 'prod-category' ),
 			)
 		);
+	}
+
+	public function register_post_meta_box(){
+		add_meta_box( 'leason_category',__( 'Leason type', 'leason_category_domain' ),array($this, 'create_leason_type'),'lesson','side','core');
+	}
+
+
+
+	public function create_leason_type($post){
+
+		wp_nonce_field( plugin_basename( __FILE__ ), 'lalala_nonce_id' );
+
+		$get_lesson_attr 	= get_post_meta(  $post->ID, '__lesson_post_attr', $single = true );
+
+		$leason_types = array(
+			'lesson_1' => 'Intermediate Lesson',
+			'lesson_private' => 'Private Lesson',
+			'lesson_group' => 'Group Lesson',
+			'lesson_kids_private' => 'Kids Private Lesson',
+			'lesson_semi_private' => 'Semi Private Lesson',
+			'lesson_kids_semi_private' => 'Kids Semi Private Lesson',
+		)
+
+		?>
+
+		<select name="lesson[type]">
+			<?php
+
+			foreach ($leason_types as $id => $lesson){
+				echo '<option value="'.$id.'">'.$lesson.'</option>';
+			}
+
+			?>
+		</select>
+
+		<?php
+	}
+
+
+	public function save_post_meta(){
+		// verify if this is an auto save routine.
+		// If it is our form has not been submitted, so we dont want to do anything
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+			return;
+
+		// verify this came from the our screen and with proper authorization,
+		// because save_post can be triggered at other times
+		if ( !isset( $_POST['lalala_nonce_id'] ) || !wp_verify_nonce( $_POST['lalala_nonce_id'], plugin_basename( __FILE__ ) ) )
+			return;
+
+
+		// Check permissions
+		if ( !current_user_can( 'edit_post', $_POST['post_ID'] ) )
+			return;
+
+		$post_ID = $_POST['post_ID'];
+
+
+		$featured_home = $_POST['lesson'];
+		add_post_meta($post_ID, '__lesson_post_attr', $featured_home, true) or
+		update_post_meta( $post_ID, '__lesson_post_attr', $featured_home );
+
+	}
+
+
+	public function get_lesson_meta($postId = ''){
+		global $post;
+
+		$id = $post->ID;
+
+		if( $postId ){
+			$id = $postId;
+		}
+
+		$get_lesson_attr = get_post_meta(  $id, '__lesson_post_attr', $single = true );
+
+		return $get_lesson_attr;
 	}
 }
 
