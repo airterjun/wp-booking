@@ -2,6 +2,11 @@
 ** Author : Edy Saputra
 */
 
+@import 'layouts/mixins';
+@import 'layouts/form';
+@import 'layouts/typo';
+@import 'layouts/global';
+
 @mixin flex(){
 	display: -webkit-box;
 	display: -moz-box;
@@ -23,30 +28,25 @@
 */
 .go-surf-container{
 	float: left;
-	
-	.set-flex{
-		@include flex();
+	color: #929292;
 
-		&> div{
-			padding: 10px;
 
-			@include setFlex(1 auto);
-		}
+	.gs-row-float{
+		float: left;
+		width: 100%;
 	}
+
 
 	select,
 	input{
 		border: 1px solid #CCC;
-		width: 100%;
 		position: relative;
-		margin: auto;
 		height: 40px;
 		line-height: 40px;
 		outline: none;
 	}
 
 	input{
-		text-align: center;
 		border-radius: 5px;
 
 		&[type=submit]{
@@ -59,14 +59,66 @@
 
 
 	&.step-two{
-		max-width: 800px;
-		margin-top : 150px;
+		width: 100%;
+		max-width: 1000px;
+
 	}
 
+	.select-activity{
+		margin: 10px 0 40px 0;
+
+		.activity{
+			padding: 0;
+
+			input{
+				height: auto;
+				width: auto;
+				display: inline-block;
+			}
+		}
+	}
+
+
+
+	.personal-information{
+		margin-top : 60px;
+		margin-bottom : 30px;
+
+		article{
+			width: 400px;
+			float: left;
+		}
+	}
+
+	.personal-information-input{
+
+		> div{
+			padding: 0;
+		}
+
+
+		.adult-detail {
+
+			.adult-input-detail {
+
+
+				input{
+					width: 70%;
+					text-align: left;
+				}
+
+				select{
+					width: 20%;
+					float: right;
+				}
+			}
+		}
+	}
 }
 
 #go-surf-home-form{
 	float: left;
 	width: 100%;
 	background-color: #ebebeb;
+	padding: 10px;
 }

@@ -90,7 +90,11 @@ class GoSurfCPT
 	}
 
 	public function register_post_meta_box(){
-		add_meta_box( 'leason_category',__( 'Leason type', 'leason_category_domain' ),array($this, 'create_leason_type'),'lesson','side','core');
+		add_meta_box( 'leason_category',__( 'Lesson type', 'leason_category_domain' ),array($this, 'create_leason_type'),'lesson','side','core');
+
+		add_meta_box( 'leason_price',__( 'Price', 'leason_price_domain' ),array($this, 'create_leason_price'), array('lesson', 'tours'),'side','core');
+
+		add_meta_box( 'board_price',__( 'Price', 'board_price_domain' ),array($this, 'create_board_price'), array('board'),'side','core');
 	}
 
 
@@ -102,7 +106,7 @@ class GoSurfCPT
 		$get_lesson_attr 	= get_post_meta(  $post->ID, '__lesson_post_attr', $single = true );
 
 		$leason_types = array(
-			'lesson_1' => 'Intermediate Lesson',
+			'lesson_intermediate' => 'Intermediate Lesson',
 			'lesson_private' => 'Private Lesson',
 			'lesson_group' => 'Group Lesson',
 			'lesson_kids_private' => 'Kids Private Lesson',
@@ -116,7 +120,10 @@ class GoSurfCPT
 			<?php
 
 			foreach ($leason_types as $id => $lesson){
-				echo '<option value="'.$id.'">'.$lesson.'</option>';
+				if($get_lesson_attr['type'] == $id)
+					echo '<option selected value="'.$id.'">'.$lesson.'</option>';	
+				else
+					echo '<option value="'.$id.'">'.$lesson.'</option>';
 			}
 
 			?>
@@ -125,6 +132,78 @@ class GoSurfCPT
 		<?php
 	}
 
+	public function create_leason_price($post){
+
+		wp_nonce_field( plugin_basename( __FILE__ ), 'lalala_nonce_id' );
+
+		$get_lesson_attr 	= get_post_meta(  $post->ID, '__lesson_post_attr', $single = true );
+		(isset($get_lesson_attr['price'])) ? $price = $get_lesson_attr['price'] : $price = '';
+		?>
+		<div>
+			<label>USD :</label>
+			<input type="text" value="<?php echo $price ?>" name="lesson[price]">
+		</div>
+		
+
+		<?php
+	}
+
+	public function create_board_price($post){
+		wp_nonce_field( plugin_basename( __FILE__ ), 'lalala_nonce_id' );
+
+		$get_lesson_attr 	= get_post_meta(  $post->ID, '__lesson_post_attr', $single = true );
+		//var_dump($get_lesson_attr);die;
+		$board_prices = array(
+			'1-hour' => '1 Hour',
+			'2-hours' => '2 Hours',
+			'1-day' => '1 Day',
+			'2-days' => '2 Days',
+			'3-days' => '3 Days',
+		)
+		?>
+		<div class="inline-form" id="bd-price-wrapper">
+			<?php
+				if($get_lesson_attr != ''){
+					foreach ($get_lesson_attr as $type => $price) {
+						$j = 0;
+						?>
+							<div class="dyn-form">
+							<select name="board_price[<?php echo $j ?>][type]" id="price-type" class="board-dyn-price">	
+						<?php	
+								foreach ($board_prices as $index => $desc){
+									if($index == $type)
+										echo '<option selected value="'.$index.'">'.$desc.'</option>';
+									else
+										echo '<option value="'.$index.'">'.$desc.'</option>';
+								}
+						?>
+							</select>
+							<input type="text" value="<?php echo $price ?>" placeholder="Price in USD" name="board_price[<?php echo $j ?>][value]" id="board-price">
+							<input type="button" class="board-remove" value="x"/>
+							</div>
+						<?php			
+						$j++;
+					}
+				}else{
+			?>
+				<select name="board_price[0][type]" id="price-type" class="board-dyn-price">
+					<?php
+						foreach ($board_prices as $index => $desc){
+							echo '<option value="'.$index.'">'.$desc.'</option>';
+						}
+					?>
+				</select>
+				<input type="text" placeholder="Price in USD" name="board_price[0][value]" id="board-price">
+			<?php	
+			}
+
+			?>
+								
+		</div>
+		<input type="button" id="add-board-price" value="more price"/>
+
+		<?php
+	}
 
 	public function save_post_meta(){
 		// verify if this is an auto save routine.
@@ -144,8 +223,17 @@ class GoSurfCPT
 
 		$post_ID = $_POST['post_ID'];
 
-
-		$featured_home = $_POST['lesson'];
+		if(isset($_POST['lesson'])){
+			$featured_home = $_POST['lesson'];
+			//var_dump($featured_home);die;
+		}
+		
+		if(isset($_POST['board_price'])){
+			foreach ($_POST['board_price'] as $key => $value) {
+				$featured_home[$value['type']] = $value['value'];
+			}			
+			//var_dump($featured_home);die;
+		}
 		add_post_meta($post_ID, '__lesson_post_attr', $featured_home, true) or
 		update_post_meta( $post_ID, '__lesson_post_attr', $featured_home );
 

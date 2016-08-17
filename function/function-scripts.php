@@ -16,3 +16,5 @@ function wpdocs_theme_name_scripts() {
 	wp_enqueue_style('jquery-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
 }
 add_action( 'wp_enqueue_scripts', 'wpdocs_theme_name_scripts' );
+add_action('admin_print_styles-post.php', 'wpdocs_theme_name_scripts');
+add_action('admin_print_styles-post-new.php', 'wpdocs_theme_name_scripts');
