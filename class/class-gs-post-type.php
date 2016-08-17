@@ -19,12 +19,9 @@ class GoSurfCPT
 	public function init()
 	{
 
-		if ( is_admin() ) {
 			add_action('init', array($this, 'register_post_types'));
 			add_action('add_meta_boxes', array($this, 'register_post_meta_box'));
 			add_action('save_post', array($this, 'save_post_meta'));
-		}
-
 
 	}
 
@@ -65,7 +62,7 @@ class GoSurfCPT
 				'has_archive'           => false,
 				'supports' 				=> array( 'title','thumbnail','editor'),
 				'show_in_nav_menus' 	=> true,
-				'taxonomies'          => array( 'prod-category' ),
+				'taxonomies'            => array( 'prod-category' ),
 			)
 		);
 
@@ -84,7 +81,7 @@ class GoSurfCPT
 				'has_archive'           => false,
 				'supports' 				=> array( 'title','thumbnail','editor'),
 				'show_in_nav_menus' 	=> true,
-				'taxonomies'          => array( 'prod-category' ),
+				'taxonomies'            => array( 'prod-category' ),
 			)
 		);
 	}
@@ -101,9 +98,13 @@ class GoSurfCPT
 
 	public function create_leason_type($post){
 
+		global $test2;
+
 		wp_nonce_field( plugin_basename( __FILE__ ), 'lalala_nonce_id' );
 
 		$get_lesson_attr 	= get_post_meta(  $post->ID, '__lesson_post_attr', $single = true );
+
+		var_dump($get_lesson_attr);
 
 		$leason_types = array(
 			'lesson_intermediate' => 'Intermediate Lesson',
@@ -112,7 +113,10 @@ class GoSurfCPT
 			'lesson_kids_private' => 'Kids Private Lesson',
 			'lesson_semi_private' => 'Semi Private Lesson',
 			'lesson_kids_semi_private' => 'Kids Semi Private Lesson',
-		)
+		);
+
+
+		echo $test2;
 
 		?>
 

@@ -6,6 +6,9 @@
  * Time: 11:03 PM
  */
 
+
+$test = '';
+
 function form_book()
 {
 
