@@ -1,3 +1,5 @@
+var $$ = jQuery;
+
 jQuery( function ( $ ) {
 
 	$("#surf-board-rental").click(function() {
@@ -174,6 +176,64 @@ jQuery( function ( $ ) {
 	jQuery('.datepicker').datepicker({
         dateFormat : 'dd-mm-yy'
     });
+
+
+
+
+	form.checking("#step-two");
+	form.checking("#form-client-data");
 });
 
 
+
+
+var form = {
+
+	init : function (){
+
+	},
+
+	checking : function (formid){
+
+		var currForm = $$(formid);
+
+
+		currForm.on('submit', function(){
+			var requireFields = $$(this).find('.gs-require');
+			var totalFillable = 0;
+
+			console.log(requireFields.length);
+
+
+			if( requireFields.length > 0 ) {
+
+
+				$$.each(requireFields, function (i, e) {
+
+
+					if( $$(e).val() == '' ) {
+						$$(e).addClass('gs-error');
+					}else{
+						$$(e).removeClass('gs-error');
+					}
+
+				});
+
+				var totalError = $$(this).find('.gs-error').length;
+
+				return totalError <= 0;
+
+
+			}else{
+
+				requireFields.removeClass('gs-error');
+
+				console.log('submit')
+				return true;
+			}
+
+		})
+
+	}
+
+};

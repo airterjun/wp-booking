@@ -41,7 +41,7 @@
 		margin-right: 0;
 	}
 
-	select, input{
+	select, input:not([type='checkbox']){
 		width: 100% !important;
 	}
 }

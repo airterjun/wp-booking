@@ -55,7 +55,6 @@ function get_result_step_one()
 
 	}
 
-
 	if( isset($_GET['step']) == 2 && isset($_POST['post_step_two'])){
 
 		get_step_two();
@@ -65,7 +64,9 @@ function get_result_step_one()
 
 	if( isset($_GET['step']) == 3 && isset($_POST['post_step_three'])){
 
-		get_step_three();
+//		get_step_three();
+
+		require_once PLUGIN_PATH_DIR . '/PayPal-PHP-SDK/sample/payments/CreatePayment.php';
 
 	}
 

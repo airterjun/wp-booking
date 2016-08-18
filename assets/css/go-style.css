@@ -9,6 +9,8 @@ input, button, input:not([type=checkbox]), textarea, select {
   border-radius: 4px;
   padding: 0 15px;
   text-align: left; }
+  input.gs-error, button.gs-error, input:not([type=checkbox]).gs-error, textarea.gs-error, select.gs-error {
+    border-color: #F00 !important; }
 
 textarea {
   height: 100px; }
@@ -66,7 +68,7 @@ textarea {
   margin-right: 10px; }
   .gs-flex-auto:last-child {
     margin-right: 0; }
-  .gs-flex-auto select, .gs-flex-auto input {
+  .gs-flex-auto select, .gs-flex-auto input:not([type='checkbox']) {
     width: 100% !important; }
 
 .gs-flex-2-col {
